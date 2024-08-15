@@ -8,6 +8,6 @@ class Profile(models.Model):
     user_id = models.CharField(max_length=18)
     favorite_commander = models.UUIDField(editable=True)
     moxfield_id = models.CharField(max_length=50)
-    archidektId = models.CharField(max_length=50)
+    archidekt_id = models.CharField(max_length=50)
     # decks
     toski_id = models.CharField(max_length=50)
