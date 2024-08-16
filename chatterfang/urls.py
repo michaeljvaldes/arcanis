@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from knox import views as knox_views
 from rest_framework.routers import DefaultRouter
 
 from profiles import views
@@ -25,6 +26,8 @@ router.register(r'profiles', views.ProfileViewSet, basename='profile')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls))
-
+    path(r'login/', views.LoginView.as_view(), name='knox_login'),
+    path(r'logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
+    path(r'logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
+    path('', include(router.urls)),
 ]
