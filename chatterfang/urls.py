@@ -19,7 +19,7 @@ from django.urls import include, path
 from knox import views as knox_views
 from rest_framework.routers import DefaultRouter
 
-from profiles import views
+from matches import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),

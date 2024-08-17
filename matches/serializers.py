@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from profiles.models import Commander, Profile
+from matches.models import Commander, Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):

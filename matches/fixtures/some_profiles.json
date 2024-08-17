@@ -1,6 +1,6 @@
 [
     {
-        "model": "profiles.profile",
+        "model": "matches.profile",
         "pk": "00abf726-eb0d-4447-ab50-dc3c8d2a0671",
         "fields": {
             "user_id": "563015313935826984",
@@ -9,7 +9,7 @@
         }
     },
     {
-        "model": "profiles.profile",
+        "model": "matches.profile",
         "pk": "1ac916a8-8797-451b-83c8-cca04b777540",
         "fields": {
             "user_id": "226715073031176193",
@@ -18,7 +18,7 @@
         }
     },
     {
-        "model": "profiles.profile",
+        "model": "matches.profile",
         "pk": "324521d5-54ea-4455-bf53-4f049fce6422",
         "fields": {
             "user_id": "396390132988641281",
@@ -27,7 +27,7 @@
         }
     },
     {
-        "model": "profiles.profile",
+        "model": "matches.profile",
         "pk": "5eb050b8-70d2-476f-923b-0c60ea824578",
         "fields": {
             "user_id": "226715073031176193",
@@ -36,7 +36,7 @@
         }
     },
     {
-        "model": "profiles.profile",
+        "model": "matches.profile",
         "pk": "64633823-1b0b-4839-93c2-549fadd5b38b",
         "fields": {
             "user_id": "572151497555443773",
@@ -46,7 +46,7 @@
         }
     },
     {
-        "model": "profiles.profile",
+        "model": "matches.profile",
         "pk": "692f9e94-4081-42d0-8441-42891239f298",
         "fields": {
             "user_id": "224315766042787840",
@@ -56,7 +56,7 @@
         }
     },
     {
-        "model": "profiles.profile",
+        "model": "matches.profile",
         "pk": "70d2923e-60bb-49ff-acf6-c85daf9f9213",
         "fields": {
             "user_id": "230904033915830272",
@@ -67,7 +67,7 @@
         }
     },
     {
-        "model": "profiles.profile",
+        "model": "matches.profile",
         "pk": "e4be9806-f733-4df2-8ebe-c3f6c9018401",
         "fields": {
             "user_id": "71482669514366976",

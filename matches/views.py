@@ -4,9 +4,9 @@ from rest_framework import generics, permissions
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
-from profiles.models import Commander, Profile
-from profiles.permissions import IsOwnerOrReadOnly
-from profiles.serializers import CommanderSerializer, ProfileSerializer
+from matches.models import Commander, Profile
+from matches.permissions import IsOwnerOrReadOnly
+from matches.serializers import CommanderSerializer, ProfileSerializer
 
 
 class LoginView(KnoxLoginView):
