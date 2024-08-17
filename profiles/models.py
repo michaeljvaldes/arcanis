@@ -14,3 +14,29 @@ class Profile(models.Model):
 
     user = models.ForeignKey(
         'auth.User', related_name='profiles', on_delete=models.CASCADE)
+
+
+class Match(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    date = models.DateField()
+    number_of_turns = models.PositiveSmallIntegerField(blank=True, null=True)
+    first_knockout_turn = models.PositiveSmallIntegerField(
+        blank=True, null=True)
+    minutes = models.PositiveSmallIntegerField(blank=True, null=True)
+
+
+class Commander(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=50)
+    color_identities = models.CharField(max_length=5)
+    image = models.URLField()
+    scryfall_uri = models.URLField()
+
+
+class MatchPlayer(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=50)
+    rank = models.PositiveSmallIntegerField
+    turn_position = models.PositiveSmallIntegerField()
+    commanders = models.ManyToManyField(Commander)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
