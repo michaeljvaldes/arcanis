@@ -4,9 +4,9 @@ from rest_framework import generics, permissions
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
-from profiles.models import Profile
+from profiles.models import Commander, Profile
 from profiles.permissions import IsOwnerOrReadOnly
-from profiles.serializers import ProfileSerializer
+from profiles.serializers import CommanderSerializer, ProfileSerializer
 
 
 class LoginView(KnoxLoginView):
@@ -31,3 +31,13 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+
+class CommanderList(generics.ListAPIView):
+    queryset = Commander.objects.all()
+    serializer_class = CommanderSerializer
+
+
+class CommanderDetail(generics.RetrieveAPIView):
+    queryset = Commander.objects.all()
+    serializer_class = CommanderSerializer
