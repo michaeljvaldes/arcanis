@@ -18,6 +18,7 @@ class Profile(models.Model):
 
 class Match(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    index = models.PositiveIntegerField()
     date = models.DateField()
     number_of_turns = models.PositiveSmallIntegerField(blank=True, null=True)
     first_knockout_turn = models.PositiveSmallIntegerField(
@@ -36,7 +37,8 @@ class Commander(models.Model):
 class MatchPlayer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
-    rank = models.PositiveSmallIntegerField
+    rank = models.PositiveSmallIntegerField()
     turn_position = models.PositiveSmallIntegerField()
     commanders = models.ManyToManyField(Commander)
-    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    match = models.ForeignKey(
+        Match, related_name='match_players', on_delete=models.CASCADE)
