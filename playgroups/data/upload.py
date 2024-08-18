@@ -3,8 +3,8 @@ from typing import List
 
 import requests
 
-from matches.data.transform import transform
-from matches.models import Commander, Match, MatchPlayer, Player, Playgroup
+from playgroups.data.transform import transform
+from playgroups.models import Commander, Match, MatchPlayer, Player, Playgroup
 
 
 def sync_data():

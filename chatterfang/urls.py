@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from knox import views as knox_views
 
-from matches import views
+from playgroups import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),

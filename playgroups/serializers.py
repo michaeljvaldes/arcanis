@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from matches.models import Commander, Match, MatchPlayer, Player, Playgroup
+from playgroups.models import Commander, Match, MatchPlayer, Player, Playgroup
 
 
 class PlaygroupSerializer(serializers.ModelSerializer):
