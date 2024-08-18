@@ -29,5 +29,7 @@ urlpatterns = [
     path('profiles/', views.ProfileList.as_view()),
     path('profiles/<str:pk>/', views.ProfileDetail.as_view()),
     path('commanders/', views.CommanderList.as_view()),
-    path('commanders/<str:pk>', views.CommanderDetail.as_view())
+    path('commanders/<str:pk>', views.CommanderDetail.as_view()),
+    path('matches/', views.MatchList.as_view()),
+    path('matches/<str:pk>/', views.MatchDetail.as_view())
 ]

@@ -4,9 +4,10 @@ from rest_framework import generics, permissions
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
-from matches.models import Commander, Profile
+from matches.models import Commander, Match, Profile
 from matches.permissions import IsOwnerOrReadOnly
-from matches.serializers import CommanderSerializer, ProfileSerializer
+from matches.serializers import (CommanderSerializer, MatchSerializer,
+                                 ProfileSerializer)
 
 
 class LoginView(KnoxLoginView):
@@ -41,3 +42,13 @@ class CommanderList(generics.ListAPIView):
 class CommanderDetail(generics.RetrieveAPIView):
     queryset = Commander.objects.all()
     serializer_class = CommanderSerializer
+
+
+class MatchList(generics.ListAPIView):
+    queryset = Match.objects.all()
+    serializer_class = MatchSerializer
+
+
+class MatchDetail(generics.RetrieveAPIView):
+    queryset = Match.objects.all()
+    serializer_class = MatchSerializer
