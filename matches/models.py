@@ -3,9 +3,16 @@ import uuid
 from django.db import models
 
 
+class Playgroup(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=15)
+
+
 class Player(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
+    playgroup = models.ForeignKey(
+        Playgroup, related_name='players', on_delete=models.CASCADE)
 
 
 class Match(models.Model):
@@ -16,6 +23,8 @@ class Match(models.Model):
     first_knockout_turn = models.PositiveSmallIntegerField(
         blank=True, null=True)
     minutes = models.PositiveSmallIntegerField(blank=True, null=True)
+    playgroup = models.ForeignKey(
+        Playgroup, related_name='matches', on_delete=models.CASCADE)
 
 
 class Commander(models.Model):

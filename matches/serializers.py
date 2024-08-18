@@ -1,13 +1,18 @@
 from rest_framework import serializers
 
-from matches.models import Commander, Match, MatchPlayer, Player
+from matches.models import Commander, Match, MatchPlayer, Player, Playgroup
+
+
+class PlaygroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Playgroup
+        fields = ['id', 'name']
 
 
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ['id', 'user_id', 'favorite_commander',
-                  'moxfield_id', 'archidekt_id', 'toski_id']
+        fields = ['id', 'name']
 
 
 class CommanderSerializer(serializers.ModelSerializer):

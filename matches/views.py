@@ -4,10 +4,10 @@ from rest_framework import generics, permissions
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
-from matches.models import Commander, Match, Player
+from matches.models import Commander, Match, Player, Playgroup
 from matches.permissions import IsOwnerOrReadOnly
 from matches.serializers import (CommanderSerializer, MatchSerializer,
-                                 PlayerSerializer)
+                                 PlayerSerializer, PlaygroupSerializer)
 
 
 class LoginView(KnoxLoginView):
@@ -19,6 +19,16 @@ class LoginView(KnoxLoginView):
         user = serializer.validated_data['user']
         login(request, user)
         return super(LoginView, self).post(request, format=None)
+
+
+class PlaygroupList(generics.ListAPIView):
+    queryset = Playgroup.objects.all()
+    serializer_class = PlaygroupSerializer
+
+
+class PlaygroupDetail(generics.RetrieveAPIView):
+    queryset = Playgroup.objects.all()
+    serializer_class = PlaygroupSerializer
 
 
 class PlayerList(generics.ListCreateAPIView):
