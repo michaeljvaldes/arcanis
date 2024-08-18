@@ -17,7 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from knox import views as knox_views
-from rest_framework.routers import DefaultRouter
 
 from matches import views
 
@@ -26,8 +25,8 @@ urlpatterns = [
     path(r'login/', views.LoginView.as_view(), name='knox_login'),
     path(r'logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
     path(r'logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
-    path('profiles/', views.ProfileList.as_view()),
-    path('profiles/<str:pk>/', views.ProfileDetail.as_view()),
+    path('players/', views.PlayerList.as_view()),
+    path('players/<str:pk>/', views.PlayerDetail.as_view()),
     path('commanders/', views.CommanderList.as_view()),
     path('commanders/<str:pk>', views.CommanderDetail.as_view()),
     path('matches/', views.MatchList.as_view()),
