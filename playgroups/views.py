@@ -1,13 +1,14 @@
 from django.contrib.auth import login
 from knox.views import LoginView as KnoxLoginView
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, viewsets
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from playgroups.models import Commander, Match, Player, Playgroup
 from playgroups.permissions import IsOwnerOrReadOnly
-from playgroups.serializers import (CommanderSerializer, MatchSerializer,
-                                    PlayerSerializer, PlaygroupSerializer)
+from playgroups.serializers import (CommanderSerializer, MatchCreateSerializer,
+                                    MatchSerializer, PlayerSerializer,
+                                    PlaygroupSerializer, SimpleMatchSerializer)
 
 
 class LoginView(KnoxLoginView):
@@ -54,11 +55,12 @@ class CommanderDetail(generics.RetrieveAPIView):
     serializer_class = CommanderSerializer
 
 
-class MatchList(generics.ListAPIView):
+class MatchViewSet(viewsets.ModelViewSet):
     queryset = Match.objects.all()
-    serializer_class = MatchSerializer
 
-
-class MatchDetail(generics.RetrieveAPIView):
-    queryset = Match.objects.all()
-    serializer_class = MatchSerializer
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return SimpleMatchSerializer
+        elif self.action == 'create':
+            return MatchCreateSerializer
+        return MatchSerializer

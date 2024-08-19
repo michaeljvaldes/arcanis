@@ -15,10 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 from knox import views as knox_views
+from rest_framework.routers import DefaultRouter
 
 from playgroups import views
+
+router = DefaultRouter()
+router.register(r'matches', views.MatchViewSet, basename='match')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,6 +35,5 @@ urlpatterns = [
     path('players/<str:pk>/', views.PlayerDetail.as_view()),
     path('commanders/', views.CommanderList.as_view()),
     path('commanders/<str:pk>', views.CommanderDetail.as_view()),
-    path('matches/', views.MatchList.as_view()),
-    path('matches/<str:pk>/', views.MatchDetail.as_view())
+    path('', include(router.urls))
 ]
