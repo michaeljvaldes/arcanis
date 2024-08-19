@@ -7,6 +7,9 @@ from django.db import models
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
+    def __str__(self) -> str:
+        return self.username
+
 
 class Playgroup(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -48,6 +51,9 @@ class Match(models.Model):
     class Meta:
         unique_together = ('playgroup', 'index')
 
+    def __str__(self) -> str:
+        return f"{self.playgroup.name} match {self.index}"
+
 
 class Commander(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -55,6 +61,9 @@ class Commander(models.Model):
     color_identities = models.CharField(max_length=5)
     image = models.URLField()
     scryfall_uri = models.URLField()
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class MatchPlayer(models.Model):
