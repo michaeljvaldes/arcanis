@@ -14,6 +14,12 @@ class Player(models.Model):
     playgroup = models.ForeignKey(
         Playgroup, related_name='players', on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ('playgroup', 'name')
+
+    def __str__(self) -> str:
+        return self.name
+
 
 class Match(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -25,6 +31,9 @@ class Match(models.Model):
     minutes = models.PositiveSmallIntegerField(blank=True, null=True)
     playgroup = models.ForeignKey(
         Playgroup, related_name='matches', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('playgroup', 'index')
 
 
 class Commander(models.Model):

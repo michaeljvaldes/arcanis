@@ -64,6 +64,13 @@ class MatchPlayerCreateSerializer(serializers.ModelSerializer):
         model = MatchPlayer
         fields = ['rank', 'turn_position', 'player', 'commanders']
 
+    def validate_commanders(self, value):
+        if len(value) < 1:
+            raise serializers.ValidationError(
+                "Match player must have at least one commander"
+            )
+        return value
+
 
 class MatchCreateSerializer(serializers.ModelSerializer):
     playgroup = serializers.PrimaryKeyRelatedField(
@@ -81,8 +88,6 @@ class MatchCreateSerializer(serializers.ModelSerializer):
         mp = validated_data.pop('match_players')
         index = Match.objects.filter(
             playgroup_id=validated_data['playgroup']).count() + 1
-
-        # validate(match_players_data)
 
         match = Match.objects.create(index=index, **validated_data)
 
