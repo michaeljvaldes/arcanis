@@ -27,7 +27,9 @@ def delete_existing_match_data():
 
 
 def save_matches(matches: List[dict]):
-    playgroup = Playgroup.objects.create(name='Squirrels')
+    playgroup = Playgroup.objects.create(
+        name='Squirrels', creator_id=563015313935826984
+    )
     for m in matches:
         match = Match(
             index=m['index'],

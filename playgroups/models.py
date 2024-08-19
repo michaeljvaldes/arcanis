@@ -6,6 +6,9 @@ from django.db import models
 class Playgroup(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=15)
+    creator = models.ForeignKey(
+        'auth.user', related_name='playgroups_created', null=True, on_delete=models.SET_NULL)
+    managers = models.ManyToManyField('auth.user')
 
 
 class Player(models.Model):
