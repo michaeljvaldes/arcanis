@@ -5,11 +5,13 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from playgroups.models import Commander, Match, Player, Playgroup
-from playgroups.permissions import (IsOwnerOrReadOnly,
-                                    IsPlaygroupAdminOrReadOnly)
-from playgroups.serializers import (CommanderSerializer, MatchCreateSerializer,
-                                    MatchSerializer, MatchSimpleSerializer,
-                                    PlayerSerializer, PlaygroupSerializer)
+from playgroups.permissions import IsPlaygroupAdminOrReadOnly
+from playgroups.serializers.commander import CommanderSerializer
+from playgroups.serializers.match import (MatchCreateSerializer,
+                                          MatchSerializer,
+                                          MatchSimpleSerializer)
+from playgroups.serializers.player import PlayerSerializer
+from playgroups.serializers.playgroup import PlaygroupSerializer
 
 
 class LoginView(KnoxLoginView):
