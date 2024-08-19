@@ -1,58 +1,17 @@
 [
     {
         "model": "auth.user",
-        "pk": 563015313935826984,
+        "pk": 1,
         "fields": {
-            "email": "563015313935826984@example.com",
-            "username": "563015313935826984"
+            "email": "25c0546b@example.com",
+            "username": "25c0546b"
         }
     },
     {
-        "model": "auth.user",
-        "pk": 226715073031176193,
+        "model": "playgroups.profile",
+        "pk": "b6dbeaf3-ecd7-4872-93c3-3e93544ea76f",
         "fields": {
-            "email": "226715073031176193@example.com",
-            "username": "226715073031176193"
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 396390132988641281,
-        "fields": {
-            "email": "396390132988641281@example.com",
-            "username": "396390132988641281"
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 572151497555443773,
-        "fields": {
-            "email": "572151497555443773@example.com",
-            "username": "572151497555443773"
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 224315766042787840,
-        "fields": {
-            "email": "224315766042787840@example.com",
-            "username": "224315766042787840"
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 230904033915830272,
-        "fields": {
-            "email": "230904033915830272@example.com",
-            "username": "230904033915830272"
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 71482669514366976,
-        "fields": {
-            "email": "71482669514366976@example.com",
-            "username": "71482669514366976"
+            "user_id": 1
         }
     }
 ]

@@ -1,14 +1,25 @@
 import uuid
 
+from django.contrib.auth.models import User
 from django.db import models
+
+
+class Profile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class Playgroup(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=15)
-    creator = models.ForeignKey(
-        'auth.user', related_name='playgroups_created', null=True, on_delete=models.SET_NULL)
-    managers = models.ManyToManyField('auth.user')
+    owner = models.ForeignKey(
+        Profile, related_name='playgroups_owned', null=True, on_delete=models.SET_NULL)
+    managers = models.ManyToManyField(
+        Profile, related_name='playgroups_managed'
+    )
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Player(models.Model):

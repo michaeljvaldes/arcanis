@@ -5,10 +5,11 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from playgroups.models import Commander, Match, Player, Playgroup
-from playgroups.permissions import IsOwnerOrReadOnly
+from playgroups.permissions import (IsOwnerOrReadOnly,
+                                    IsPlaygroupAdminOrReadOnly)
 from playgroups.serializers import (CommanderSerializer, MatchCreateSerializer,
-                                    MatchSerializer, PlayerSerializer,
-                                    PlaygroupSerializer, SimpleMatchSerializer)
+                                    MatchSerializer, MatchSimpleSerializer,
+                                    PlayerSerializer, PlaygroupSerializer)
 
 
 class LoginView(KnoxLoginView):
@@ -22,27 +23,18 @@ class LoginView(KnoxLoginView):
         return super(LoginView, self).post(request, format=None)
 
 
-class PlaygroupList(generics.ListAPIView):
+class PlaygroupViewSet(viewsets.ModelViewSet):
     queryset = Playgroup.objects.all()
     serializer_class = PlaygroupSerializer
 
 
-class PlaygroupDetail(generics.RetrieveAPIView):
-    queryset = Playgroup.objects.all()
-    serializer_class = PlaygroupSerializer
-
-
-class PlayerList(generics.ListCreateAPIView):
+class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsPlaygroupAdminOrReadOnly]
 
-
-class PlayerDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Player.objects.all()
-    serializer_class = PlayerSerializer
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    def get_queryset(self):
+        return Player.objects.filter(playgroup=self.kwargs['playgroup_pk'])
 
 
 class CommanderList(generics.ListAPIView):
@@ -56,11 +48,14 @@ class CommanderDetail(generics.RetrieveAPIView):
 
 
 class MatchViewSet(viewsets.ModelViewSet):
-    queryset = Match.objects.all()
+    permission_classes = [IsPlaygroupAdminOrReadOnly]
+
+    def get_queryset(self):
+        return Match.objects.filter(playgroup=self.kwargs['playgroup_pk'])
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return SimpleMatchSerializer
+            return MatchSimpleSerializer
         elif self.action == 'create':
             return MatchCreateSerializer
         return MatchSerializer

@@ -34,7 +34,7 @@ class MatchPlayerSerializer(serializers.ModelSerializer):
                   'match', 'player', 'commanders']
 
 
-class SimpleMatchSerializer(serializers.ModelSerializer):
+class MatchSimpleSerializer(serializers.ModelSerializer):
     playgroup = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
 
     class Meta:
@@ -73,23 +73,24 @@ class MatchPlayerCreateSerializer(serializers.ModelSerializer):
 
 
 class MatchCreateSerializer(serializers.ModelSerializer):
-    playgroup = serializers.PrimaryKeyRelatedField(
-        many=False, queryset=Playgroup.objects.all()
-    )
     match_players = MatchPlayerCreateSerializer(many=True, read_only=False)
 
     class Meta:
         model = Match
         fields = ['id', 'index', 'date', 'number_of_turns', 'first_knockout_turn',
-                  'minutes', 'playgroup', 'match_players']
+                  'minutes', 'match_players']
         read_only_fields = ['id', 'index']
 
     def create(self, validated_data):
+        playgroup_id = self.context.get(
+            'request').parser_context['kwargs']['playgroup_pk']
         mp = validated_data.pop('match_players')
         index = Match.objects.filter(
-            playgroup_id=validated_data['playgroup']).count() + 1
+            playgroup_id=playgroup_id).count() + 1
 
-        match = Match.objects.create(index=index, **validated_data)
+        match = Match.objects.create(
+            index=index, playgroup_id=playgroup_id, **validated_data
+        )
 
         for match_player_data in mp:
             commanders = match_player_data.pop('commanders')

@@ -17,23 +17,27 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from knox import views as knox_views
-from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
 
 from playgroups import views
 
-router = DefaultRouter()
-router.register(r'matches', views.MatchViewSet, basename='match')
+router = routers.SimpleRouter()
+router.register(r'playgroups', views.PlaygroupViewSet)
+
+playgroups_router = routers.NestedSimpleRouter(
+    router, r'playgroups', lookup='playgroup')
+playgroups_router.register(
+    r'players', views.PlayerViewSet, basename='playgroup-players')
+playgroups_router.register(
+    r'matches', views.MatchViewSet, basename='playgroup-matches')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path(r'login/', views.LoginView.as_view(), name='knox_login'),
     path(r'logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
     path(r'logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
-    path('playgroups/', views.PlaygroupList.as_view()),
-    path('playgroups/<str:pk>/', views.PlaygroupDetail.as_view()),
-    path('players/', views.PlayerList.as_view()),
-    path('players/<str:pk>/', views.PlayerDetail.as_view()),
+    path(r'', include(router.urls)),
+    path(r'', include(playgroups_router.urls)),
     path('commanders/', views.CommanderList.as_view()),
-    path('commanders/<str:pk>', views.CommanderDetail.as_view()),
-    path('', include(router.urls))
+    path('commanders/<str:pk>', views.CommanderDetail.as_view())
 ]
