@@ -27,11 +27,13 @@ def delete_existing_match_data():
 
 
 def save_matches(matches: List[dict]):
+    user_id = "b6dbeaf3-ecd7-4872-93c3-3e93544ea76f"
     playgroup = Playgroup.objects.create(
         id="e55349d6-eb79-426d-97cc-6b924a56f59e",
         name='Squirrels',
-        creator_id="b6dbeaf3-ecd7-4872-93c3-3e93544ea76f"
+        owner_id=user_id
     )
+    playgroup.managers.add(user_id)
     for m in matches:
         match = Match(
             index=m['index'],

@@ -24,8 +24,8 @@ class IsPlaygroupAdminOrReadOnly(permissions.BasePermission):
     """
     Custom permission to limit unsafe actions on a playgroup and its 
     children to the owner or a manager of that playgroup. The playgroup
-    is obtained from the url route and the permissions for that playgroup
-    are obtained from the user profile.
+    is obtained from the url route and compared with the permissions of
+    the user.
     """
 
     def is_playgroup_admin_or_read_only(self, request, view):
@@ -35,8 +35,8 @@ class IsPlaygroupAdminOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the owner of the snippet.
-        if request.user.is_authenticated and request.user.profile is not None:
-            return is_playgroup_admin(request.user.profile, playgroup_id=uuid.UUID(view.kwargs['playgroup_pk']))
+        if request.user.is_authenticated:
+            return is_playgroup_admin(request.user, playgroup_id=uuid.UUID(view.kwargs['playgroup_pk']))
         return False
 
     def has_permission(self, request, view):
