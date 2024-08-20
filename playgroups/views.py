@@ -4,6 +4,7 @@ from knox.views import LoginView as KnoxLoginView
 from rest_framework import generics, permissions, viewsets
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.fields import empty
 
 from playgroups.models import Commander, Match, Player, Playgroup
 from playgroups.permissions import IsPlaygroupAdminOrReadOnly
@@ -23,12 +24,13 @@ class LoginView(KnoxLoginView):
     def post(self, request, format=None):
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        if isinstance(serializer.validated_data, dict):
-            user = serializer.validated_data["user"]
-            login(request, user)
-            return super(LoginView, self).post(request, format=None)
-        else:
-            raise ValidationError("Invalid credentials")
+        if not serializer.validated_data or isinstance(
+            serializer.validated_data, empty
+        ):
+            return ValidationError("Invalid credentials")
+        user = serializer.validated_data["user"]
+        login(request, user)
+        return super(LoginView, self).post(request, format=None)
 
 
 class PlaygroupViewSet(viewsets.ModelViewSet):
