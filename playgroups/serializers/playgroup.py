@@ -7,3 +7,4 @@ class PlaygroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Playgroup
         fields = ['id', 'name']
+        read_only_fields = ['id']

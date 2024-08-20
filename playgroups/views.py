@@ -29,6 +29,11 @@ class PlaygroupViewSet(viewsets.ModelViewSet):
     queryset = Playgroup.objects.all()
     serializer_class = PlaygroupSerializer
 
+    def get_permissions(self):
+        if self.action in ['update', 'partial_update', 'delete']:
+            return [IsPlaygroupAdminOrReadOnly()]
+        return [permissions.IsAuthenticatedOrReadOnly()]
+
 
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
