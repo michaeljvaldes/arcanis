@@ -52,19 +52,19 @@ def build_player(name, commander_name, position, rank):
     return player
 
 
-def int_val(cell) -> int:
+def int_val(cell) -> int | None:
     if cell == None:
         return None
     return int(cell["v"])
 
 
-def str_val(cell) -> str:
+def str_val(cell) -> str | None:
     if cell == None:
         return None
     return cell["v"]
 
 
-def date_val(cell) -> datetime.date:
+def date_val(cell) -> datetime.date | None:
     if cell == None:
         return None
     date = cell["f"].split("/")

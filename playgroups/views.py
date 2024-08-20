@@ -1,4 +1,5 @@
 from django.contrib.auth import login
+from django.forms import ValidationError
 from knox.views import LoginView as KnoxLoginView
 from rest_framework import generics, permissions, viewsets
 from rest_framework.authentication import BasicAuthentication
@@ -22,9 +23,12 @@ class LoginView(KnoxLoginView):
     def post(self, request, format=None):
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data["user"]
-        login(request, user)
-        return super(LoginView, self).post(request, format=None)
+        if isinstance(serializer.validated_data, dict):
+            user = serializer.validated_data["user"]
+            login(request, user)
+            return super(LoginView, self).post(request, format=None)
+        else:
+            raise ValidationError("Invalid credentials")
 
 
 class PlaygroupViewSet(viewsets.ModelViewSet):
