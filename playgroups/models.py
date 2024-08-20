@@ -15,10 +15,9 @@ class Playgroup(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=15)
     owner = models.ForeignKey(
-        User, related_name='playgroups_owned', null=True, on_delete=models.SET_NULL)
-    managers = models.ManyToManyField(
-        User, related_name='playgroups_managed'
+        User, related_name="playgroups_owned", null=True, on_delete=models.SET_NULL
     )
+    managers = models.ManyToManyField(User, related_name="playgroups_managed")
 
     def __str__(self) -> str:
         return self.name
@@ -28,10 +27,11 @@ class Player(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
     playgroup = models.ForeignKey(
-        Playgroup, related_name='players', on_delete=models.CASCADE)
+        Playgroup, related_name="players", on_delete=models.CASCADE
+    )
 
     class Meta:
-        unique_together = ('playgroup', 'name')
+        unique_together = ("playgroup", "name")
 
     def __str__(self) -> str:
         return self.name
@@ -42,14 +42,14 @@ class Match(models.Model):
     index = models.PositiveIntegerField()
     date = models.DateField()
     number_of_turns = models.PositiveSmallIntegerField(blank=True, null=True)
-    first_knockout_turn = models.PositiveSmallIntegerField(
-        blank=True, null=True)
+    first_knockout_turn = models.PositiveSmallIntegerField(blank=True, null=True)
     minutes = models.PositiveSmallIntegerField(blank=True, null=True)
     playgroup = models.ForeignKey(
-        Playgroup, related_name='matches', on_delete=models.CASCADE)
+        Playgroup, related_name="matches", on_delete=models.CASCADE
+    )
 
     class Meta:
-        unique_together = ('playgroup', 'index')
+        unique_together = ("playgroup", "index")
 
     def __str__(self) -> str:
         return f"{self.playgroup.name} match {self.index}"
@@ -72,6 +72,8 @@ class MatchPlayer(models.Model):
     turn_position = models.PositiveSmallIntegerField()
     commanders = models.ManyToManyField(Commander)
     player = models.ForeignKey(
-        Player, related_name='match_players', on_delete=models.CASCADE)
+        Player, related_name="match_players", on_delete=models.CASCADE
+    )
     match = models.ForeignKey(
-        Match, related_name='match_players', on_delete=models.CASCADE)
+        Match, related_name="match_players", on_delete=models.CASCADE
+    )

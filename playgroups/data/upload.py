@@ -29,38 +29,35 @@ def delete_existing_match_data():
 def save_matches(matches: List[dict]):
     user_id = "b6dbeaf3-ecd7-4872-93c3-3e93544ea76f"
     playgroup = Playgroup.objects.create(
-        id="e55349d6-eb79-426d-97cc-6b924a56f59e",
-        name='Squirrels',
-        owner_id=user_id
+        id="e55349d6-eb79-426d-97cc-6b924a56f59e", name="Squirrels", owner_id=user_id
     )
     playgroup.managers.add(user_id)
     for m in matches:
         match = Match(
-            index=m['index'],
-            date=m['date'],
-            number_of_turns=m['number_of_turns'],
-            first_knockout_turn=m['first_knockout_turn'],
-            minutes=m['minutes'],
-            playgroup=playgroup
+            index=m["index"],
+            date=m["date"],
+            number_of_turns=m["number_of_turns"],
+            first_knockout_turn=m["first_knockout_turn"],
+            minutes=m["minutes"],
+            playgroup=playgroup,
         )
         match.save()
 
-        for p in m['players']:
+        for p in m["players"]:
             player, _created = Player.objects.update_or_create(
-                name=p['name'],
-                playgroup=playgroup
+                name=p["name"], playgroup=playgroup
             )
 
             commanders: List[Commander] = []
-            for c in p['commander_names']:
+            for c in p["commander_names"]:
                 commander = Commander.objects.get(name=c)
                 commanders.append(commander)
 
             match_player = MatchPlayer.objects.create(
-                rank=p['rank'],
-                turn_position=p['turn_position'],
+                rank=p["rank"],
+                turn_position=p["turn_position"],
                 player=player,
-                match=match
+                match=match,
             )
             match_player.commanders.set(commanders)
     return

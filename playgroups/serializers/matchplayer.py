@@ -6,15 +6,16 @@ from playgroups.serializers.commander import CommanderSerializer
 
 class MatchPlayerSerializer(serializers.ModelSerializer):
     match = serializers.PrimaryKeyRelatedField(
-        many=False, read_only=False, queryset=Match.objects.all())
+        many=False, read_only=False, queryset=Match.objects.all()
+    )
     player = serializers.PrimaryKeyRelatedField(
-        many=False, read_only=False, queryset=Player.objects.all())
+        many=False, read_only=False, queryset=Player.objects.all()
+    )
     commanders = CommanderSerializer(many=True, read_only=True)
 
     class Meta:
         model = MatchPlayer
-        fields = ['id', 'rank', 'turn_position',
-                  'match', 'player', 'commanders']
+        fields = ["id", "rank", "turn_position", "match", "player", "commanders"]
 
 
 class MatchPlayerCreateSerializer(serializers.ModelSerializer):
@@ -27,7 +28,7 @@ class MatchPlayerCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MatchPlayer
-        fields = ['rank', 'turn_position', 'player', 'commanders']
+        fields = ["rank", "turn_position", "player", "commanders"]
 
     def validate_commanders(self, value):
         if len(value) < 1:

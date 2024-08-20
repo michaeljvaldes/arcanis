@@ -6,7 +6,9 @@ from playgroups.models import User
 
 
 def is_playgroup_admin(user: User, playgroup_id: uuid.UUID):
-    return is_playgroup_owner(user, playgroup_id) or is_playgroup_manager(user, playgroup_id)
+    return is_playgroup_owner(user, playgroup_id) or is_playgroup_manager(
+        user, playgroup_id
+    )
 
 
 def is_playgroup_owner(user: User, playgroup_id: uuid.UUID):

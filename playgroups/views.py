@@ -7,9 +7,11 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from playgroups.models import Commander, Match, Player, Playgroup
 from playgroups.permissions import IsPlaygroupAdminOrReadOnly
 from playgroups.serializers.commander import CommanderSerializer
-from playgroups.serializers.match import (MatchCreateSerializer,
-                                          MatchSerializer,
-                                          MatchSimpleSerializer)
+from playgroups.serializers.match import (
+    MatchCreateSerializer,
+    MatchSerializer,
+    MatchSimpleSerializer,
+)
 from playgroups.serializers.player import PlayerSerializer
 from playgroups.serializers.playgroup import PlaygroupSerializer
 
@@ -20,7 +22,7 @@ class LoginView(KnoxLoginView):
     def post(self, request, format=None):
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        user = serializer.validated_data["user"]
         login(request, user)
         return super(LoginView, self).post(request, format=None)
 
@@ -30,7 +32,7 @@ class PlaygroupViewSet(viewsets.ModelViewSet):
     serializer_class = PlaygroupSerializer
 
     def get_permissions(self):
-        if self.action in ['update', 'partial_update', 'delete']:
+        if self.action in ["update", "partial_update", "delete"]:
             return [IsPlaygroupAdminOrReadOnly()]
         return [permissions.IsAuthenticatedOrReadOnly()]
 
@@ -41,7 +43,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
     permission_classes = [IsPlaygroupAdminOrReadOnly]
 
     def get_queryset(self):
-        return Player.objects.filter(playgroup=self.kwargs['playgroup_pk'])
+        return Player.objects.filter(playgroup=self.kwargs["playgroup_pk"])
 
 
 class CommanderList(generics.ListAPIView):
@@ -58,11 +60,11 @@ class MatchViewSet(viewsets.ModelViewSet):
     permission_classes = [IsPlaygroupAdminOrReadOnly]
 
     def get_queryset(self):
-        return Match.objects.filter(playgroup=self.kwargs['playgroup_pk'])
+        return Match.objects.filter(playgroup=self.kwargs["playgroup_pk"])
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == "list":
             return MatchSimpleSerializer
-        elif self.action == 'create':
+        elif self.action == "create":
             return MatchCreateSerializer
         return MatchSerializer
