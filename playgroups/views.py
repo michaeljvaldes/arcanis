@@ -38,7 +38,7 @@ class PlaygroupViewSet(viewsets.ModelViewSet):
     serializer_class = PlaygroupSerializer
 
     def get_permissions(self):
-        if self.action in ["update", "partial_update", "delete"]:
+        if self.action in ["update", "partial_update", "destroy"]:
             return [IsPlaygroupAdminOrReadOnly()]
         return [permissions.IsAuthenticatedOrReadOnly()]
 
