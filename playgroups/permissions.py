@@ -51,7 +51,7 @@ class PlaygroupChildPermission(permissions.BasePermission):
         playgroup_id = self.get_playgroup_id(view)
         if request.user.is_authenticated and playgroup_id:
             return is_playgroup_admin(
-                request.user, playgroup_id=uuid.UUID(view.get_playgroup_id())
+                request.user, playgroup_id=uuid.UUID(playgroup_id)
             )
         return False
 
