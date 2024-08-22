@@ -15,9 +15,11 @@ class Playgroup(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=15, unique=True)
     owner = models.ForeignKey(
-        User, related_name="playgroups_owned", null=True, on_delete=models.SET_NULL
+        User, related_name="playgroups_owned", blank=True, on_delete=models.CASCADE
     )
-    managers = models.ManyToManyField(User, related_name="playgroups_managed")
+    managers = models.ManyToManyField(
+        User, related_name="playgroups_managed", blank=True
+    )
 
     def __str__(self) -> str:
         return self.name
