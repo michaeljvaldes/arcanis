@@ -52,10 +52,21 @@ class PlaygroupViewSet(viewsets.ModelViewSet):
 
 
 class PlaygroupChildViewSet(viewsets.ModelViewSet):
+    """
+    A generic viewset to support common operations for child
+    objects of playgroups. The playgroup id obtained from the
+    url is used to inform permissions, filter the queryset,
+    and overwrite the data in create/update operations.
+    """
+
     permission_classes = [PlaygroupChildPermission]
 
     def get_playgroup_id(self) -> str:
         return self.kwargs["playgroup_pk"]
+
+    def get_queryset(self):
+        if self.queryset:
+            return self.queryset.filter(playgroup=self.get_playgroup_id())
 
     def perform_create(self, serializer):
         serializer.save(playgroup_id=self.get_playgroup_id())
@@ -65,15 +76,12 @@ class PlaygroupChildViewSet(viewsets.ModelViewSet):
 
 
 class PlayerViewSet(PlaygroupChildViewSet):
+    queryset = Player.objects.all()
     serializer_class = PlayerSerializer
-
-    def get_queryset(self):
-        return Player.objects.filter(playgroup=self.get_playgroup_id())
 
 
 class MatchViewSet(PlaygroupChildViewSet):
-    def get_queryset(self):
-        return Match.objects.filter(self.get_playgroup_id())
+    queryset = Match.objects.all()
 
     def get_serializer_class(self):
         if self.action == "list":

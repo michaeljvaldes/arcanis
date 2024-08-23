@@ -14,7 +14,6 @@ class MatchSimpleSerializer(serializers.ModelSerializer):
         model = Match
         fields = [
             "id",
-            "index",
             "date",
             "number_of_turns",
             "first_knockout_turn",
@@ -30,7 +29,6 @@ class MatchSerializer(serializers.ModelSerializer):
         model = Match
         fields = [
             "id",
-            "index",
             "date",
             "number_of_turns",
             "first_knockout_turn",
@@ -46,7 +44,6 @@ class MatchCreateSerializer(serializers.ModelSerializer):
         model = Match
         fields = [
             "id",
-            "index",
             "date",
             "number_of_turns",
             "first_knockout_turn",
@@ -56,15 +53,9 @@ class MatchCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "index"]
 
     def create(self, validated_data):
-        playgroup_id = self.context.get("request").parser_context["kwargs"][
-            "playgroup_pk"
-        ]
         mp = validated_data.pop("match_players")
-        index = Match.objects.filter(playgroup_id=playgroup_id).count() + 1
 
-        match = Match.objects.create(
-            index=index, playgroup_id=playgroup_id, **validated_data
-        )
+        match = Match.objects.create(**validated_data)
 
         for match_player_data in mp:
             commanders = match_player_data.pop("commanders")

@@ -41,7 +41,6 @@ class Player(models.Model):
 
 class Match(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    index = models.PositiveIntegerField()
     date = models.DateField()
     number_of_turns = models.PositiveSmallIntegerField(blank=True, null=True)
     first_knockout_turn = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -50,11 +49,8 @@ class Match(models.Model):
         Playgroup, related_name="matches", on_delete=models.CASCADE
     )
 
-    class Meta:
-        unique_together = ("playgroup", "index")
-
     def __str__(self) -> str:
-        return f"{self.playgroup.name} match {self.index}"
+        return f"{self.playgroup.name} match {self.date}"
 
 
 class Commander(models.Model):
