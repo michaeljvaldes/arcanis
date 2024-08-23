@@ -1,14 +1,16 @@
 services:
   db:
     image: postgres
+    container_name: postgresql
+    hostname: postgresql
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "4444:4444"
 
 volumes:
   postgres_data:
