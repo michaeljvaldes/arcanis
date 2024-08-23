@@ -10,10 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import environ
 import os
 from urllib.parse import urlparse
 
 from pathlib import Path
+
+
+# Initialize environment variables
+env = environ.Env(DEBUG=(bool, False))
+BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -80,7 +87,7 @@ WSGI_APPLICATION = "chatterfang.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = env("DATABASE_URL")
 url = urlparse(DATABASE_URL)
 
 DATABASES = {
