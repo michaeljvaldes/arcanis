@@ -1,10 +1,10 @@
 [
-    {
-        "model": "playgroups.User",
-        "pk": "b6dbeaf3-ecd7-4872-93c3-3e93544ea76f",
-        "fields": {
-            "email": "b6dbeaf3@example.com",
-            "username": "b6dbeaf3"
-        }
-    }
+	{
+		"model": "playgroups.User",
+		"pk": "b6dbeaf3-ecd7-4872-93c3-3e93544ea76f",
+		"fields": {
+			"email": "b6dbeaf3@example.com",
+			"username": "b6dbeaf3"
+		}
+	}
 ]
