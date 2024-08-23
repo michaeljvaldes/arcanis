@@ -74,7 +74,7 @@ class MatchPlayer(models.Model):
     turn_position = models.PositiveSmallIntegerField()
     commanders = models.ManyToManyField(Commander)
     player = models.ForeignKey(
-        Player, related_name="match_players", on_delete=models.CASCADE
+        Player, related_name="match_players", on_delete=models.PROTECT
     )
     match = models.ForeignKey(
         Match, related_name="match_players", on_delete=models.CASCADE

@@ -15,7 +15,7 @@ from playgroups.serializers.match import (
     MatchSerializer,
     MatchSimpleSerializer,
 )
-from playgroups.serializers.player import PlayerCreateSerializer, PlayerSerializer
+from playgroups.serializers.player import PlayerSerializer
 from playgroups.serializers.playgroup import (
     PlaygroupCreateSerializer,
     PlaygroupSerializer,
@@ -51,49 +51,36 @@ class PlaygroupViewSet(viewsets.ModelViewSet):
             return PlaygroupSerializer
 
 
-class PlayerViewSet(viewsets.ModelViewSet):
-    queryset = Player.objects.all()
+class PlaygroupChildViewSet(viewsets.ModelViewSet):
     permission_classes = [PlaygroupChildPermission]
 
+    def get_playgroup_id(self) -> str:
+        return self.kwargs["playgroup_pk"]
+
+    def perform_create(self, serializer):
+        serializer.save(playgroup_id=self.get_playgroup_id())
+
+    def perform_update(self, serializer):
+        serializer.save(playgroup_id=self.get_playgroup_id())
+
+
+class PlayerViewSet(PlaygroupChildViewSet):
+    serializer_class = PlayerSerializer
+
     def get_queryset(self):
-        return Player.objects.filter(playgroup=self.kwargs["playgroup_pk"])
+        return Player.objects.filter(playgroup=self.get_playgroup_id())
+
+
+class MatchViewSet(PlaygroupChildViewSet):
+    def get_queryset(self):
+        return Match.objects.filter(self.get_playgroup_id())
 
     def get_serializer_class(self):
-        if self.action == "create":
-            return PlayerCreateSerializer
-        else:
-            return PlayerSerializer
-
-    def create(self, request, *args, **kwargs):
-        # overwrite playgroup id
-        data = request.data
-        data["playgroup"] = self.kwargs["playgroup_pk"]
-
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
-
-    def update(self, request, *args, **kwargs):
-        # overwrite playgroup id
-        data = request.data
-        data["playgroup"] = self.kwargs["playgroup_pk"]
-
-        partial = kwargs.pop("partial", False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        if getattr(instance, "_prefetched_objects_cache", None):
-            # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
-            instance._prefetched_objects_cache = {}
-
-        return Response(serializer.data)
+        if self.action == "list":
+            return MatchSimpleSerializer
+        elif self.action == "create":
+            return MatchCreateSerializer
+        return MatchSerializer
 
 
 class CommanderList(generics.ListAPIView):
@@ -104,17 +91,3 @@ class CommanderList(generics.ListAPIView):
 class CommanderDetail(generics.RetrieveAPIView):
     queryset = Commander.objects.all()
     serializer_class = CommanderSerializer
-
-
-class MatchViewSet(viewsets.ModelViewSet):
-    permission_classes = [PlaygroupChildPermission]
-
-    def get_queryset(self):
-        return Match.objects.filter(playgroup=self.kwargs["playgroup_pk"])
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return MatchSimpleSerializer
-        elif self.action == "create":
-            return MatchCreateSerializer
-        return MatchSerializer
