@@ -11,11 +11,7 @@ from playgroups.permissions import PlaygroupChildPermission, PlaygroupPermission
 from playgroups.serializers.commander import CommanderSerializer
 from playgroups.serializers.match import MatchSerializer
 from playgroups.serializers.player import PlayerSerializer
-from playgroups.serializers.playgroup import (
-    PlaygroupCreateSerializer,
-    PlaygroupSerializer,
-    PlaygroupUpdateSerializer,
-)
+from playgroups.serializers.playgroup import PlaygroupSerializer
 
 
 class LoginView(KnoxLoginView):
@@ -35,15 +31,8 @@ class LoginView(KnoxLoginView):
 
 class PlaygroupViewSet(viewsets.ModelViewSet):
     queryset = Playgroup.objects.all()
+    serializer_class = PlaygroupSerializer
     permission_classes = [PlaygroupPermission]
-
-    def get_serializer_class(self):
-        if self.action == "update":
-            return PlaygroupUpdateSerializer
-        elif self.action == "create":
-            return PlaygroupCreateSerializer
-        else:
-            return PlaygroupSerializer
 
 
 class PlaygroupChildViewSet(viewsets.ModelViewSet):
