@@ -2,13 +2,35 @@ import uuid
 
 from rest_framework import permissions
 
-from playgroups.services import is_playgroup_admin
+from playgroups.services import is_playgroup_admin, is_playgroup_owner
 
 
-class IsPlaygroupAdminOrReadOnly(permissions.BasePermission):
+class PlaygroupPermission(permissions.BasePermission):
     """
-    Custom permission to limit unsafe actions on a playgroup and its
-    children to the owner or a manager of that playgroup. The playgroup
+    Custom permission to limit unsafe actions on playgroups. Any
+    authenticated user may create a playgroup, but changing an
+    existing playgroup requires further permissions. The playgroup
+    is obtained from the url route and compared with the permissions of
+    the user.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        if request.user.is_authenticated:
+            return is_playgroup_owner(request.user, obj.id)
+        return False
+
+
+class PlaygroupChildPermission(permissions.BasePermission):
+    """
+    Custom permission to limit unsafe actions on a playgroup child
+    model to the owner or a manager of that playgroup. The playgroup
     is obtained from the url route and compared with the permissions of
     the user.
     """
@@ -26,8 +48,14 @@ class IsPlaygroupAdminOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the owner of the snippet.
-        if request.user.is_authenticated:
+        playgroup_id = self.get_playgroup_id(view)
+        if request.user.is_authenticated and playgroup_id:
             return is_playgroup_admin(
-                request.user, playgroup_id=uuid.UUID(view.kwargs["playgroup_pk"])
+                request.user, playgroup_id=uuid.UUID(playgroup_id)
             )
         return False
+
+    def get_playgroup_id(self, view):
+        if "playgroup_pk" in view.kwargs:
+            return view.kwargs["playgroup_pk"]
+        return None

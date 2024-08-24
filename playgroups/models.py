@@ -15,9 +15,11 @@ class Playgroup(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=15, unique=True)
     owner = models.ForeignKey(
-        User, related_name="playgroups_owned", null=True, on_delete=models.SET_NULL
+        User, related_name="playgroups_owned", blank=True, on_delete=models.CASCADE
     )
-    managers = models.ManyToManyField(User, related_name="playgroups_managed")
+    managers = models.ManyToManyField(
+        User, related_name="playgroups_managed", blank=True
+    )
 
     def __str__(self) -> str:
         return self.name
@@ -39,7 +41,6 @@ class Player(models.Model):
 
 class Match(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    index = models.PositiveIntegerField()
     date = models.DateField()
     number_of_turns = models.PositiveSmallIntegerField(blank=True, null=True)
     first_knockout_turn = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -48,11 +49,8 @@ class Match(models.Model):
         Playgroup, related_name="matches", on_delete=models.CASCADE
     )
 
-    class Meta:
-        unique_together = ("playgroup", "index")
-
     def __str__(self) -> str:
-        return f"{self.playgroup.name} match {self.index}"
+        return f"{self.playgroup.name} match {self.date}"
 
 
 class Commander(models.Model):
@@ -72,7 +70,7 @@ class MatchPlayer(models.Model):
     turn_position = models.PositiveSmallIntegerField()
     commanders = models.ManyToManyField(Commander)
     player = models.ForeignKey(
-        Player, related_name="match_players", on_delete=models.CASCADE
+        Player, related_name="match_players", on_delete=models.PROTECT
     )
     match = models.ForeignKey(
         Match, related_name="match_players", on_delete=models.CASCADE
