@@ -5,8 +5,8 @@ FROM python:3.11
 WORKDIR /code
 
 # Install dependencies
-COPY requirements.txt /code/
-RUN pip install -r requirements/docker.txt
+COPY requirements /code/requirements
+RUN pip install -r /requirements/docker.txt
 
 # Copy the rest of the application code
 COPY . /code/
