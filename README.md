@@ -1,6 +1,6 @@
-# chatterfang
+# arcanis
 
-A POC for creating a chatterfang REST service with django
+A POC for creating Arcanis, a django REST service replacement for chatterfang
 
 To run a dev environment:
 
