@@ -6,7 +6,7 @@ WORKDIR /code
 
 # Install dependencies
 COPY requirements.txt /code/
-RUN pip install -r requirements.txt
+RUN pip install -r requirements/docker.txt
 
 # Copy the rest of the application code
 COPY . /code/
