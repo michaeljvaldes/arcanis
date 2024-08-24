@@ -8,10 +8,12 @@ from rest_framework.fields import empty
 
 from playgroups.models import Commander, Match, Player, Playgroup
 from playgroups.permissions import PlaygroupChildPermission, PlaygroupPermission
-from playgroups.serializers.commander import CommanderSerializer
-from playgroups.serializers.match import MatchSerializer
-from playgroups.serializers.player import PlayerSerializer
-from playgroups.serializers.playgroup import PlaygroupSerializer
+from playgroups.serializers import (
+    CommanderSerializer,
+    MatchSerializer,
+    PlayerSerializer,
+    PlaygroupSerializer,
+)
 
 
 class LoginView(KnoxLoginView):
