@@ -58,6 +58,4 @@ class PlaygroupChildPermission(permissions.BasePermission):
     def get_playgroup_id(self, view):
         if "playgroup_pk" in view.kwargs:
             return view.kwargs["playgroup_pk"]
-        elif "pk" in view.kwargs:
-            return view.kwargs["pk"]
         return None

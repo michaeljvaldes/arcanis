@@ -1,20 +1,15 @@
 from django.contrib.auth import login
 from django.forms import ValidationError
 from knox.views import LoginView as KnoxLoginView
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, viewsets
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.fields import empty
-from rest_framework.response import Response
 
 from playgroups.models import Commander, Match, Player, Playgroup
 from playgroups.permissions import PlaygroupChildPermission, PlaygroupPermission
 from playgroups.serializers.commander import CommanderSerializer
-from playgroups.serializers.match import (
-    MatchCreateSerializer,
-    MatchSerializer,
-    MatchSimpleSerializer,
-)
+from playgroups.serializers.match import MatchSerializer
 from playgroups.serializers.player import PlayerSerializer
 from playgroups.serializers.playgroup import (
     PlaygroupCreateSerializer,
@@ -68,12 +63,6 @@ class PlaygroupChildViewSet(viewsets.ModelViewSet):
         if self.queryset:
             return self.queryset.filter(playgroup=self.get_playgroup_id())
 
-    def perform_create(self, serializer):
-        serializer.save(playgroup_id=self.get_playgroup_id())
-
-    def perform_update(self, serializer):
-        serializer.save(playgroup_id=self.get_playgroup_id())
-
 
 class PlayerViewSet(PlaygroupChildViewSet):
     queryset = Player.objects.all()
@@ -82,13 +71,7 @@ class PlayerViewSet(PlaygroupChildViewSet):
 
 class MatchViewSet(PlaygroupChildViewSet):
     queryset = Match.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return MatchSimpleSerializer
-        elif self.action == "create":
-            return MatchCreateSerializer
-        return MatchSerializer
+    serializer_class = MatchSerializer
 
 
 class CommanderList(generics.ListAPIView):
