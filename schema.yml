@@ -1,0 +1,832 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /commanders/:
+    get:
+      operationId: commanders_list
+      tags:
+      - commanders
+      security:
+      - knoxApiToken: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Commander'
+          description: ''
+  /commanders/{id}:
+    get:
+      operationId: commanders_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - commanders
+      security:
+      - knoxApiToken: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commander'
+          description: ''
+  /login/:
+    post:
+      operationId: login_create
+      tags:
+      - login
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          description: No response body
+  /logout/:
+    post:
+      operationId: logout_create
+      tags:
+      - logout
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          description: No response body
+  /logoutall/:
+    post:
+      operationId: logoutall_create
+      description: |-
+        Log the user out of all sessions
+        I.E. deletes all auth tokens for the user
+      tags:
+      - logoutall
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          description: No response body
+  /playgroups/:
+    get:
+      operationId: playgroups_list
+      tags:
+      - playgroups
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Playgroup'
+          description: ''
+    post:
+      operationId: playgroups_create
+      tags:
+      - playgroups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playgroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Playgroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Playgroup'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playgroup'
+          description: ''
+  /playgroups/{id}/:
+    get:
+      operationId: playgroups_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this playgroup.
+        required: true
+      tags:
+      - playgroups
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playgroup'
+          description: ''
+    put:
+      operationId: playgroups_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this playgroup.
+        required: true
+      tags:
+      - playgroups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playgroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Playgroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Playgroup'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playgroup'
+          description: ''
+    patch:
+      operationId: playgroups_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this playgroup.
+        required: true
+      tags:
+      - playgroups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPlaygroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPlaygroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPlaygroup'
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playgroup'
+          description: ''
+    delete:
+      operationId: playgroups_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this playgroup.
+        required: true
+      tags:
+      - playgroups
+      security:
+      - knoxApiToken: []
+      responses:
+        '204':
+          description: No response body
+  /playgroups/{playgroup_pk}/matches/:
+    get:
+      operationId: playgroups_matches_list
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Match'
+          description: ''
+    post:
+      operationId: playgroups_matches_create
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Match'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Match'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Match'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+          description: ''
+  /playgroups/{playgroup_pk}/matches/{id}/:
+    get:
+      operationId: playgroups_matches_retrieve
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this match.
+        required: true
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+          description: ''
+    put:
+      operationId: playgroups_matches_update
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this match.
+        required: true
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Match'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Match'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Match'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+          description: ''
+    patch:
+      operationId: playgroups_matches_partial_update
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this match.
+        required: true
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMatch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMatch'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMatch'
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+          description: ''
+    delete:
+      operationId: playgroups_matches_destroy
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this match.
+        required: true
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      security:
+      - knoxApiToken: []
+      responses:
+        '204':
+          description: No response body
+  /playgroups/{playgroup_pk}/players/:
+    get:
+      operationId: playgroups_players_list
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+          description: ''
+    post:
+      operationId: playgroups_players_create
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Player'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Player'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+          description: ''
+  /playgroups/{playgroup_pk}/players/{id}/:
+    get:
+      operationId: playgroups_players_retrieve
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this player.
+        required: true
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+          description: ''
+    put:
+      operationId: playgroups_players_update
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this player.
+        required: true
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Player'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Player'
+        required: true
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+          description: ''
+    patch:
+      operationId: playgroups_players_partial_update
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this player.
+        required: true
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPlayer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPlayer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPlayer'
+      security:
+      - knoxApiToken: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+          description: ''
+    delete:
+      operationId: playgroups_players_destroy
+      description: |-
+        A generic viewset to support common operations for child
+        objects of playgroups. The playgroup id obtained from the
+        url is used to inform permissions, filter the queryset,
+        and overwrite the data in create/update operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this player.
+        required: true
+      - in: path
+        name: playgroup_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - playgroups
+      security:
+      - knoxApiToken: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Commander:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        color_identities:
+          type: string
+          maxLength: 5
+        image:
+          type: string
+          format: uri
+          maxLength: 200
+        scryfall_uri:
+          type: string
+          format: uri
+          maxLength: 200
+      required:
+      - color_identities
+      - id
+      - image
+      - name
+      - scryfall_uri
+    Match:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        playgroup:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        number_of_turns:
+          type: integer
+          nullable: true
+        first_knockout_turn:
+          type: integer
+          nullable: true
+        minutes:
+          type: integer
+          nullable: true
+        match_players:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchPlayer'
+      required:
+      - date
+      - id
+      - match_players
+      - playgroup
+    MatchPlayer:
+      type: object
+      properties:
+        rank:
+          type: integer
+        turn_position:
+          type: integer
+        player:
+          type: string
+          format: uuid
+        commanders:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - commanders
+      - player
+      - rank
+      - turn_position
+    PatchedMatch:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        playgroup:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        number_of_turns:
+          type: integer
+          nullable: true
+        first_knockout_turn:
+          type: integer
+          nullable: true
+        minutes:
+          type: integer
+          nullable: true
+        match_players:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchPlayer'
+    PatchedPlayer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        playgroup:
+          type: string
+          format: uuid
+    PatchedPlaygroup:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 15
+        owner:
+          type: string
+          format: uuid
+        managers:
+          type: array
+          items:
+            type: string
+            format: uuid
+    Player:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        playgroup:
+          type: string
+          format: uuid
+      required:
+      - id
+      - name
+      - playgroup
+    Playgroup:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 15
+        owner:
+          type: string
+          format: uuid
+        managers:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - id
+      - managers
+      - name
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    knoxApiToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
