@@ -61,7 +61,7 @@ class PlayerViewSet(PlaygroupChildViewSet):
 
 
 class MatchViewSet(PlaygroupChildViewSet):
-    queryset = Match.objects.all()
+    queryset = Match.objects.prefetch_related("match_players").all()
     serializer_class = MatchSerializer
 
 
