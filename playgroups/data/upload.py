@@ -34,7 +34,6 @@ def save_matches(matches: List[dict]):
     playgroup.managers.add(user_id)
     for m in matches:
         match = Match(
-            index=m["index"],
             date=m["date"],
             number_of_turns=m["number_of_turns"],
             first_knockout_turn=m["first_knockout_turn"],
