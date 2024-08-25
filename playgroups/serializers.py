@@ -147,4 +147,4 @@ class MatchSerializer(serializers.ModelSerializer):
 class CommanderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Commander
-        fields = ["id", "name", "color_identities", "image", "scryfall_uri"]
+        fields = ["id", "name", "color_identity", "image", "scryfall_uri"]
