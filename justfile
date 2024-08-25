@@ -14,13 +14,12 @@ migrate:
     python3 manage.py migrate
 
 loaddata: 
-    python3 manage.py loaddata some_users commanders matches
+    python3 manage.py loaddata some_users commanders squirrels
 
-db_flush: 
-    python3 manage.py flush
+db_remove:
+    rm -f db.sqlite3
 
-db_reset: 
-    db_flush makemigrations migrate loaddata
+db_reset: db_remove makemigrations migrate loaddata
 
 document:
     python3 manage.py spectacular --color --file schema.yml
