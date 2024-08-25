@@ -1,3 +1,6 @@
+install:
+    pip install -r requirements/dev.txt
+
 run: 
     python3 manage.py runserver
 
@@ -13,8 +16,11 @@ migrate:
 loaddata: 
     python3 manage.py loaddata some_users commanders matches
 
-flush_db: 
+db_flush: 
     python3 manage.py flush
 
-reset_db: 
-    flush_db makemigrations migrate loaddata
+db_reset: 
+    db_flush makemigrations migrate loaddata
+
+document:
+    python3 manage.py spectacular --color --file schema.yml
