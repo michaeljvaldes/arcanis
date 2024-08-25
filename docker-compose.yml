@@ -1,0 +1,12 @@
+services:
+  db:
+    image: postgres
+    container_name: postgres
+    hostname: postgre
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "4444:5432"
+
+volumes:
+  postgres_data:
