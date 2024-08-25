@@ -55,8 +55,8 @@ class Match(models.Model):
 
 class Commander(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=50)
-    color_identities = models.CharField(max_length=5)
+    name = models.CharField(max_length=100)
+    color_identity = models.CharField(max_length=5)
     image = models.URLField()
     scryfall_uri = models.URLField()
 
