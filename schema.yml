@@ -698,8 +698,8 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 50
-        color_identities:
+          maxLength: 100
+        color_identity:
           type: string
           maxLength: 5
         image:
@@ -711,7 +711,6 @@ components:
           format: uri
           maxLength: 200
       required:
-      - color_identities
       - id
       - image
       - name
