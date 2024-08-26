@@ -148,3 +148,12 @@ class CommanderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Commander
         fields = ["id", "name", "color_identity", "image", "scryfall_uri"]
+
+
+class UserSerializer(serializers.ModelSerializer):
+    playgroups_owned = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    playgroups_managed = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ["id", "email", "username", "playgroups_owned", "playgroups_managed"]

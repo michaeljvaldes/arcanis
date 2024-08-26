@@ -38,6 +38,8 @@ urlpatterns = [
     path(r"login/", views.LoginView.as_view(), name="knox_login"),
     path(r"logout/", knox_views.LogoutView.as_view(), name="knox_logout"),
     path(r"logoutall/", knox_views.LogoutAllView.as_view(), name="knox_logoutall"),
+    path("users/", views.UserList.as_view()),
+    path("users/<str:pk>/", views.UserDetail.as_view()),
     path(r"", include(router.urls)),
     path(r"", include(playgroups_router.urls)),
     path("commanders/", views.CommanderList.as_view()),

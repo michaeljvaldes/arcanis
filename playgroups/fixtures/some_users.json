@@ -4,7 +4,8 @@
         "pk": "b6dbeaf3-ecd7-4872-93c3-3e93544ea76f",
         "fields": {
             "email": "b6dbeaf3@example.com",
-            "username": "b6dbeaf3"
+            "username": "b6dbeaf3",
+            "password": "pbkdf2_sha256$600000$wYsLPKhMxqralFRqKtgAJR$B4DLuToCFKdOHi9/BmrLgdi5dD2P/VJydcZlKEt84n4="
         }
     }
 ]

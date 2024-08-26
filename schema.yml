@@ -57,11 +57,27 @@ paths:
       operationId: login_create
       tags:
       - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
       security:
       - basicAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+          description: ''
   /logout/:
     post:
       operationId: logout_create
@@ -687,8 +703,73 @@ paths:
       responses:
         '204':
           description: No response body
+  /users/:
+    get:
+      operationId: users_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - users
+      security:
+      - knoxApiToken: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+  /users/{id}/:
+    get:
+      operationId: users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - users
+      security:
+      - knoxApiToken: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
 components:
   schemas:
+    AuthToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+      - password
+      - token
+      - username
     Commander:
       type: object
       properties:
@@ -715,6 +796,17 @@ components:
       - image
       - name
       - scryfall_uri
+    LoginResponse:
+      type: object
+      properties:
+        expiry:
+          type: string
+          format: date-time
+        token:
+          type: string
+      required:
+      - expiry
+      - token
     Match:
       type: object
       properties:
@@ -858,6 +950,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Playgroup'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
     PatchedMatch:
       type: object
       properties:
@@ -954,6 +1069,41 @@ components:
       - id
       - managers
       - name
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        playgroups_owned:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+        playgroups_managed:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+      required:
+      - id
+      - playgroups_managed
+      - playgroups_owned
+      - username
   securitySchemes:
     basicAuth:
       type: http
