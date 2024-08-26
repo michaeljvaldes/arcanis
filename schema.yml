@@ -57,11 +57,27 @@ paths:
       operationId: login_create
       tags:
       - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
       security:
       - basicAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+          description: ''
   /logout/:
     post:
       operationId: logout_create
@@ -689,6 +705,22 @@ paths:
           description: No response body
 components:
   schemas:
+    AuthToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+      - password
+      - token
+      - username
     Commander:
       type: object
       properties:
@@ -715,6 +747,17 @@ components:
       - image
       - name
       - scryfall_uri
+    LoginResponse:
+      type: object
+      properties:
+        expiry:
+          type: string
+          format: date-time
+        token:
+          type: string
+      required:
+      - expiry
+      - token
     Match:
       type: object
       properties:

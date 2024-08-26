@@ -1,10 +1,11 @@
 from django.contrib.auth import login
-from django.forms import ValidationError
+from django.forms import DateTimeField, ValidationError
+from drf_spectacular.utils import extend_schema, inline_serializer
 from knox.views import LoginView as KnoxLoginView
 from rest_framework import generics, viewsets
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.fields import empty
+from rest_framework.fields import CharField, DateTimeField, empty
 
 from playgroups.models import Commander, Match, Player, Playgroup
 from playgroups.permissions import PlaygroupChildPermission, PlaygroupPermission
@@ -16,6 +17,13 @@ from playgroups.serializers import (
 )
 
 
+@extend_schema(
+    request=AuthTokenSerializer,
+    responses=inline_serializer(
+        name="LoginResponseSerializer",
+        fields={"expiry": DateTimeField(), "token": CharField()},
+    ),
+)
 class LoginView(KnoxLoginView):
     authentication_classes = [BasicAuthentication]
 
