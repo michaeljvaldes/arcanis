@@ -1,5 +1,6 @@
 services:
   db:
+    build: ./docker/db
     image: postgres
     container_name: arcanis_db
     hostname: postgres

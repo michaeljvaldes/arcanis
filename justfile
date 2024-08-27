@@ -11,7 +11,7 @@ db_stop: # stop the database docker container
     docker stop arcanis_db
 
 db_create: # create the database docker container
-    docker-compose --env-file ./env/dev.env up -d
+    docker-compose --env-file ./env/dev.env up -d db
 
 db_destroy: # destroy the database docker container and volume
     if docker ps -a | grep arcanis_db; then docker-compose rm -s -f -v db; fi
@@ -27,11 +27,11 @@ loaddata: # load test data from fixtures into the database
     python3 manage.py loaddata some_users commanders squirrels
 
 db_reset: # destroy, recreate, and reseed test data into the database
-    just db_destroy 
-    just db_create 
+    just db_destroy
+    just db_create
     sleep 1
-    just migrate 
-    just loaddata 
+    just migrate
+    just loaddata
 
 document: # generate api documentation
     python3 manage.py spectacular --color --file schema.yml
