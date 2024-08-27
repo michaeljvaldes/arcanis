@@ -1,12 +1,18 @@
 services:
   db:
+    build: ./docker/db
     image: postgres
-    container_name: postgres
-    hostname: postgre
+    container_name: arcanis_db
+    hostname: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "4444:5432"
+      - 4444:5432
 
 volumes:
   postgres_data:
+    name: arcanis_db_vol

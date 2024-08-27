@@ -5,6 +5,7 @@ A POC for creating Arcanis, a django REST service replacement for chatterfang
 To run a dev environment:
 
 1. Install python3 (see https://www.python.org/)
+2. Install postgres (pg_config required to compile dependencies)
 2. cd into project root directory
 3. create a virtual env (see https://docs.python.org/3/library/venv.html for more details)
 
