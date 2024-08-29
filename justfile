@@ -1,8 +1,13 @@
+### server ###
+
 install: # install the server dependencies
     pip install -r requirements.txt
 
 server_start: # start the django server
     python3 manage.py runserver
+
+
+### database ###
 
 db_start: # start the database docker container
     docker run arcanis_db
@@ -32,6 +37,9 @@ db_reset: # destroy, recreate, and reseed test data into the database
     sleep 1
     just migrate
     just loaddata
+
+
+### other ###
 
 document: # generate api documentation
     python3 manage.py spectacular --color --file schema.yml

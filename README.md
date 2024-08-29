@@ -6,6 +6,7 @@ To run a dev environment:
 
 1. Install python3 (see https://www.python.org/)
 2. Install postgres (pg_config required to compile dependencies)
+3. Install docker (required to run the dev database)
 2. cd into project root directory
 3. create a virtual env (see https://docs.python.org/3/library/venv.html for more details)
 
@@ -19,11 +20,19 @@ To run a dev environment:
 
 5. install project dependencies
 
-   `pip install -r requirements.txt`
+   `just install`
+
+6. create and run database docker container
+
+   `just db_reset`
 
 6. run server and view on localhost:8000/
 
-   `python3 manage.py runserver`
+   `just server_start`
+
+
+Check out the justfile for more commands that may improve your dev experience.
+
 
 ## Git Commit Message Guidelines
 
