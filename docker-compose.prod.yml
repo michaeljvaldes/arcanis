@@ -12,8 +12,9 @@ services:
       - 5432:5432
   server:
     build: 
-      dockerfile: ./docker/server/Dockerfile
+      dockerfile: ./docker/server/Dockerfile.prod
       context: .
+    command: gunicorn arcanis.wsgi:application --bind 0.0.0.0:8000
     container_name: arcanis_server
     volumes:
       - ./app/:/usr/src/app/
