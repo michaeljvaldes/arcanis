@@ -17,9 +17,8 @@ services:
       dockerfile: ./docker/server/Dockerfile
       context: .
     container_name: arcanis_server
-    # hostname: server
     volumes:
-      - .:/code
+      - ./app/:/usr/src/app/
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}

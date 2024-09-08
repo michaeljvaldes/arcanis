@@ -1,17 +1,28 @@
-# Use the official Python image as a base
-FROM python:3.11
+# use official base image
+FROM python:3.11.4-slim-buster
 
-# Set the working directory inside the container
-WORKDIR /code
+# set the working directory inside the container
+WORKDIR /usr/src/app
 
-# Install dependencies
-COPY requirements.txt /code/
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install system dependencies
+RUN apt-get update && apt-get install -y netcat
+
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy the rest of the application code
-COPY . /code/
+# copy entrypoint.sh
+COPY ./docker/server/entrypoint.sh .
+RUN sed -i 's/\r$//g' /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
 
-# Set environment variables for Django
-ENV PYTHONUNBUFFERED=1
+# copy project
+COPY . .
 
-ENTRYPOINT python manage.py runserver
+# run entrypoint.sh
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
