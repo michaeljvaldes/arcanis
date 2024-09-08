@@ -27,10 +27,16 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       ENV: ${ENV}
       DEBUG: ${DEBUG}
-    ports:
-      - 8000:8000
+    expose:
+      - 8000
     depends_on:
       - db
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - server
 volumes:
   postgres_data:
     name: arcanis_db_vol
