@@ -7,6 +7,16 @@ server_start: # start the django server
     python3 manage.py runserver
 
 
+### server (docker) ###
+
+server_create: # create the server docker container
+    docker-compose --env-file ./env/dev.env up -d server
+
+
+server_destroy: # destroy the server docker container
+     if docker ps -a | grep arcanis_server; then docker-compose rm -s -f -v server; fi
+
+
 ### database ###
 
 db_start: # start the database docker container

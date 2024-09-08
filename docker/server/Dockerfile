@@ -14,5 +14,4 @@ COPY . /code/
 # Set environment variables for Django
 ENV PYTHONUNBUFFERED=1
 
-# Start the django server
-RUN python3 manage.py runserver
+ENTRYPOINT python manage.py runserver
