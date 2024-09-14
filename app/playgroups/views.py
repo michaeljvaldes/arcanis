@@ -1,12 +1,7 @@
 from django.contrib.auth import login
-from django.forms import DateTimeField, ValidationError
+from django.forms import ValidationError
 from drf_spectacular.utils import extend_schema, inline_serializer
 from knox.views import LoginView as KnoxLoginView
-from rest_framework import generics, viewsets
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.fields import CharField, DateTimeField, empty
-
 from playgroups.models import Commander, Match, Player, Playgroup, User
 from playgroups.permissions import PlaygroupChildPermission, PlaygroupPermission
 from playgroups.serializers import (
@@ -16,28 +11,49 @@ from playgroups.serializers import (
     PlaygroupSerializer,
     UserSerializer,
 )
+from rest_framework import generics, viewsets
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.fields import CharField, DateTimeField, empty
 
 
 @extend_schema(
     request=AuthTokenSerializer,
     responses=inline_serializer(
         name="LoginResponseSerializer",
-        fields={"expiry": DateTimeField(), "token": CharField()},
+        fields={
+            "expiry": DateTimeField(),
+            "token": CharField(),
+        },
     ),
 )
 class LoginView(KnoxLoginView):
     authentication_classes = [BasicAuthentication]
 
-    def post(self, request, format=None):
+    def post(
+        self,
+        request,
+        format=None,
+    ):
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if not serializer.validated_data or isinstance(
-            serializer.validated_data, empty
+            serializer.validated_data,
+            empty,
         ):
             return ValidationError("Invalid credentials")
         user = serializer.validated_data["user"]
-        login(request, user)
-        return super(LoginView, self).post(request, format=None)
+        login(
+            request,
+            user,
+        )
+        return super(
+            LoginView,
+            self,
+        ).post(
+            request,
+            format=None,
+        )
 
 
 class UserList(generics.ListAPIView):
@@ -66,10 +82,14 @@ class PlaygroupChildViewSet(viewsets.ModelViewSet):
 
     permission_classes = [PlaygroupChildPermission]
 
-    def get_playgroup_id(self) -> str:
+    def get_playgroup_id(
+        self,
+    ) -> str:
         return self.kwargs["playgroup_pk"]
 
-    def get_queryset(self):
+    def get_queryset(
+        self,
+    ):
         if self.queryset:
             return self.queryset.filter(playgroup=self.get_playgroup_id())
 

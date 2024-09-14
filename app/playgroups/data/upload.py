@@ -2,7 +2,6 @@ import json
 from typing import List
 
 import requests
-
 from playgroups.data.transform import transform
 from playgroups.models import Commander, Match, MatchPlayer, Player, Playgroup
 
@@ -15,7 +14,8 @@ def sync_data():
 
 
 def fetch_match_data():
-    ENDPOINT = "https://docs.google.com/spreadsheets/d/1FsjnGp3JPsqAEmlyWlxmYK5pSwGASqfIcDl9HvD-fuk/gviz/tq?gid=1885300192"
+    ENDPOINT = "https://docs.google.com/spreadsheets/d/ \
+        1FsjnGp3JPsqAEmlyWlxmYK5pSwGASqfIcDl9HvD-fuk/gviz/tq?gid=1885300192"
     resp = requests.get(ENDPOINT)
     startText = ".setResponse("
     start: int = resp.text.index(startText) + len(startText)
