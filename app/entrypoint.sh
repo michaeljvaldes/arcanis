@@ -9,9 +9,4 @@ done
 
 echo "PostgreSQL started"
 
-
-python manage.py flush --no-input
-python manage.py migrate
-python manage.py loaddata some_users commanders squirrels
-
 exec "$@"

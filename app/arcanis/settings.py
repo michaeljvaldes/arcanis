@@ -20,8 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize environment variables
 env = environ.Env(DEBUG=(bool, False))
-ENV_NAME = env.str("ENV", default="dev")
-env.read_env(os.path.join(BASE_DIR, "env", f"{ENV_NAME}.env"))
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env.bool("DEBUG", default=True)
+
+# If debug, load environment variables from local .env file
+if DEBUG:
+    env.read_env(os.path.join(BASE_DIR.parent, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,9 +34,6 @@ env.read_env(os.path.join(BASE_DIR, "env", f"{ENV_NAME}.env"))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=False)
 
 ALLOWED_HOSTS = env.str("DJANGO_ALLOWED_HOSTS").split(" ")
 CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS").split(" ")
