@@ -5,11 +5,11 @@ from collections import defaultdict
 from typing import List
 
 import requests
-
 from playgroups.models import Commander
 from playgroups.serializers import CommanderSerializer
 
 logger = logging.getLogger("playgroups.data.commanders")
+
 
 def SYNC_COMMANDER_DATA():
     service = CommanderDataService()
@@ -17,8 +17,9 @@ def SYNC_COMMANDER_DATA():
 
 
 class CommanderDataService:
-    fetch_endpoint = "https://api.scryfall.com/cards/search?q=is:commander%20-is:digital"
-    headers={"Accept": "application/json", "User-Agent": "Arcanis/1.0"}
+    fetch_endpoint = "https://api.scryfall.com/cards/ \
+        search?q=is:commander%20-is:digital"
+    headers = {"Accept": "application/json", "User-Agent": "Arcanis/1.0"}
 
     def sync_commander_data(self):
         next_page = self.fetch_endpoint
@@ -40,9 +41,8 @@ class CommanderDataService:
         logger.info(f"Commander data fetched: {count} commanders found")
         if count == 0 or not data:
             raise Exception("No commander data found")
-        
-        return data, next_page
 
+        return data, next_page
 
     def transform_commander_data(self, json_data) -> List[dict]:
         transformed_commanders = []
@@ -56,13 +56,18 @@ class CommanderDataService:
                 transformed["color_identity"] = ""
             if data.get("image_uris") and data.get("image_uris").get("normal"):
                 transformed["image"] = data.get("image_uris").get("normal")
-            elif data.get("card_faces") and data.get("card_faces")[0].get("image_uris") and data.get("card_faces")[0].get("image_uris").get("normal"):
-                transformed["image"] = data.get("card_faces")[0].get("image_uris").get("normal")
+            elif (
+                data.get("card_faces")
+                and data.get("card_faces")[0].get("image_uris")
+                and data.get("card_faces")[0].get("image_uris").get("normal")
+            ):
+                transformed["image"] = (
+                    data.get("card_faces")[0].get("image_uris").get("normal")
+                )
             transformed["scryfall_uri"] = data.get("scryfall_uri")
-            
+
             transformed_commanders.append(transformed)
         return transformed_commanders
-
 
     def save_commanders(self, commander_dicts):
         create: List[dict] = []
@@ -86,53 +91,66 @@ class CommanderDataService:
                 serializer.save(id=create_data["id"])
                 create_count += 1
             else:
-                logger.error(f"Error creating commander id={create_data["id"]}; invalid data")
+                id = create_data["id"]
+                logger.error(f"Error creating commander id={id}; invalid data")
                 logger.error(serializer._errors)
-                
 
                 error_count += 1
 
         # update
-        for (instance, update_data) in update:
+        for instance, update_data in update:
             serializer = CommanderSerializer(instance, data=update_data, partial=False)
             if serializer.is_valid(raise_exception=False):
                 serializer.save()
                 update_count += 1
             else:
-                logger.error(f"Error updating commander id={update_data["id"]}; invalid data")
+                id = update_data["id"]
+                logger.error(f"Error updating commander id={id}; invalid data")
                 logger.error(serializer._errors)
                 error_count += 1
 
-        logger.info(f"Commanders created: {create_count}; updated: {update_count}; errors: {error_count}")
-
+        logger.info(
+            f"Commanders created: {create_count}; "
+            f"updated: {update_count}; "
+            f"errors: {error_count}"
+        )
 
     def add_extra_commanders(self):
         witch = Commander(
-            id="6914b30b-24f3-48cb-832f-c1f8510e2c9c", 
-            name="Witch of the Moors", 
-            color_identity="B", 
-            image="https://cards.scryfall.io/normal/front/6/9/6914b30b-24f3-48cb-832f-c1f8510e2c9c.jpg?1712354364", 
-            scryfall_uri="https://scryfall.com/card/otc/152/witch-of-the-moors?utm_source=api"
-            )
+            id="6914b30b-24f3-48cb-832f-c1f8510e2c9c",
+            name="Witch of the Moors",
+            color_identity="B",
+            image="https://cards.scryfall.io/normal/front/6/9/ \
+                6914b30b-24f3-48cb-832f-c1f8510e2c9c.jpg?1712354364",
+            scryfall_uri="https://scryfall.com/card/otc/152/ \
+                witch-of-the-moors?utm_source=api",
+        )
         witch.save()
-        
+
         tamanoa = Commander(
             id="6d32955b-cbf6-429b-9513-17ca75d4ec2c",
             name="Tamanoa",
             color_identity="GRW",
-            image="https://cards.scryfall.io/normal/front/6/d/6d32955b-cbf6-429b-9513-17ca75d4ec2c.jpg?1593275551",
-            scryfall_uri="https://scryfall.com/card/csp/132/tamanoa?utm_source=api"
+            image="https://cards.scryfall.io/normal/front/6/d/ \
+                6d32955b-cbf6-429b-9513-17ca75d4ec2c.jpg?1593275551",
+            scryfall_uri="https://scryfall.com/card/csp/132/ \
+                tamanoa?utm_source=api",
         )
         tamanoa.save()
 
+
 def print_ids():
-    with open("playgroups/fixtures/commanders.json") as c, open("playgroups/fixtures/squirrels.json") as s:
+    with open("playgroups/fixtures/commanders.json") as c, open(
+        "playgroups/fixtures/squirrels.json"
+    ) as s:
         commanders = json.load(c)
         squirrels = json.load(s)
 
         commander_ids = [c["pk"] for c in commanders]
-        match_players = [obj for obj in squirrels if obj.get("model") == "playgroups.matchplayer"]
-        
+        match_players = [
+            obj for obj in squirrels if obj.get("model") == "playgroups.matchplayer"
+        ]
+
         missing_ids = set()
         for mp in match_players:
             for id in mp["fields"]["commanders"]:
@@ -140,4 +158,3 @@ def print_ids():
                     missing_ids.add(id)
         print(missing_ids)
         print(len(missing_ids))
-    

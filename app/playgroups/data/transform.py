@@ -44,7 +44,7 @@ def build_player(name, commander_name, position, rank):
     player = {}
     player["name"] = str_val(name)
     commander_names = str_val(commander_name)
-    if commander_names != None:
+    if commander_names is not None:
         commander_names = commander_names.split(" && ")
     player["commander_names"] = commander_names
     player["turn_position"] = int_val(position)
@@ -53,19 +53,19 @@ def build_player(name, commander_name, position, rank):
 
 
 def int_val(cell) -> int | None:
-    if cell == None:
+    if cell is None:
         return None
     return int(cell["v"])
 
 
 def str_val(cell) -> str | None:
-    if cell == None:
+    if cell is None:
         return None
     return cell["v"]
 
 
 def date_val(cell) -> datetime.date | None:
-    if cell == None:
+    if cell is None:
         return None
     date = cell["f"].split("/")
     return datetime.date(month=int(date[0]), day=int(date[1]), year=int(date[2]))

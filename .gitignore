@@ -2,4 +2,4 @@
 .vscode/*
 /scripts/*
 **/__pycache__/*
-.env
+.env.*

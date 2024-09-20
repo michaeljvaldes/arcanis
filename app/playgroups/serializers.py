@@ -1,8 +1,7 @@
 import uuid
 
-from rest_framework import serializers
-
 from playgroups.models import Commander, Match, MatchPlayer, Player, Playgroup, User
+from rest_framework import serializers
 
 
 class PlaygroupSerializer(serializers.ModelSerializer):
@@ -54,7 +53,7 @@ class PlayerSerializer(serializers.ModelSerializer):
             self.context["request"].parser_context["kwargs"]["playgroup_pk"]
         )
         if playgroup_id != attrs["playgroup"].id:
-            raise serializers.ValidationError(f"Playgroup id does not match route")
+            raise serializers.ValidationError("Playgroup id does not match route")
         return attrs
 
 
@@ -77,7 +76,7 @@ class MatchPlayerSerializer(serializers.ModelSerializer):
         )
         if playgroup_id != attrs["player"].playgroup.id:
             raise serializers.ValidationError(
-                f"Match player playgroup id does not match route"
+                "Match player playgroup id does not match route"
             )
         return attrs
 
@@ -111,9 +110,7 @@ class MatchSerializer(serializers.ModelSerializer):
             self.context["request"].parser_context["kwargs"]["playgroup_pk"]
         )
         if playgroup_id != attrs["playgroup"].id:
-            raise serializers.ValidationError(
-                f"Match playgroup id does not match route"
-            )
+            raise serializers.ValidationError("Match playgroup id does not match route")
         return attrs
 
     def create(self, validated_data):
