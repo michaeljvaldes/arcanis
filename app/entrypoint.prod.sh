@@ -1,17 +1,13 @@
 #!/bin/sh
 
 
-echo "Waiting for postgres..."
+# echo "Flushing database"
+# python manage.py flush --no-input
 
-while ! nc -z $POSTGRES_HOST $POSTGRES_PORT; do
-    sleep 0.1
-done
-
-echo "PostgreSQL started"
-
-
-python manage.py flush --no-input
+echo "Migrating database"
 python manage.py migrate
-python manage.py loaddata some_users commanders squirrels
 
-exec "$@"
+# echo "Loading fixtures"
+# python manage.py loaddata some_users commanders squirrels
+
+exec gunicorn arcanis.wsgi:application --bind 0.0.0.0:8000

@@ -36,7 +36,8 @@ if DEBUG:
 SECRET_KEY = env.str("SECRET_KEY")
 
 ALLOWED_HOSTS = env.str("DJANGO_ALLOWED_HOSTS").split(" ")
-CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS").split(" ")
+if os.environ.get("CSRF_TRUSTED_ORIGINS") is not None:
+    CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS").split(" ")
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
