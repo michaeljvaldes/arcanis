@@ -54,7 +54,7 @@ migrate_docker: # apply migrations from server docker container
         else echo "server container must be running"; \
     fi
 
-loaddataa: # load test data from fixtures into database
+loaddata: # load test data from fixtures into database
     python3 app/manage.py loaddata some_users commanders squirrels
 
 loaddata_docker: # load test data from fixtures into database from server docker container
@@ -85,7 +85,6 @@ db_reset_docker: # destroy, recreate, and reseed test data into database from wi
 build_fresh: # destroy, create, and run server and database containers with test data
     just server_reset
     just db_reset_docker
-
 
 document: # generate api documentation
     python3 app/manage.py spectacular --color --file schema.yml
