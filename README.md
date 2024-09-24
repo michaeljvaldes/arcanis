@@ -2,7 +2,15 @@
 
 A POC for Arcanis, a django REST service replacement for chatterfang
 
-To run a dev environment:
+## To run a test environment that runs everything in docker:
+
+1. Install docker
+2. cd into project root directory
+3. build and run server and database containers and view at localhost:8000/
+
+   `just build_fresh`
+
+## To run a dev environment that rebuilds automatically with code updates:
 
 1. Install python3 (see https://www.python.org/)
 2. Install postgres (pg_config required to compile dependencies)
@@ -26,12 +34,12 @@ To run a dev environment:
 
    `just db_reset`
 
-6. run server and view on localhost:8000/
+6. run server and view at localhost:8000/
 
    `just server_start`
 
 
-Check out the justfile for more commands that may improve your dev experience.
+> Check out the justfile for more commands that may improve your dev experience.
 
 
 ## Git Commit Message Guidelines
