@@ -10,7 +10,4 @@ python manage.py migrate
 # echo "Loading fixtures"
 # python manage.py loaddata some_users commanders squirrels
 
-echo "${PWD}"
-echo "$USER"
-# exec "$@"
 exec gunicorn arcanis.wsgi:application --bind 0.0.0.0:8000
