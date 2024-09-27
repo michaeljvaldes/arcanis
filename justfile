@@ -22,7 +22,9 @@ server_reset: # destroy and recreate server container
     just server_destroy
     just server_create
 
+
 ### database ###
+
 db_stop: # stop database docker container
     docker stop arcanis-db
 
@@ -79,6 +81,7 @@ db_reset_docker: # destroy, recreate, and reseed test data into database from wi
     sleep 1
     just migrate_docker
     just loaddata_docker
+
 
 ### other ###
 
