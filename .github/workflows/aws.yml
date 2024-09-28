@@ -30,6 +30,7 @@ on: workflow_dispatch
 
 env:
   AWS_REGION: us-east-2
+  AWS_ROLE: arn:aws:iam::891377405852:role/arcanis-gh-act
   ECR_REPOSITORY_ARCANIS: 891377405852.dkr.ecr.us-east-2.amazonaws.com/pinata-party/arcanis
   ECR_REPOSITORY_NGINX: 891377405852.dkr.ecr.us-east-2.amazonaws.com/pinata-party/arcanis-nginx
   ECS_SERVICE: arn:aws:ecs:us-east-2:891377405852:service/arcanis_cluster/arcanis-service-lb-prod
@@ -57,7 +58,7 @@ jobs:
         with:
           audience: sts.amazonaws.com.
           aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: ${{ arn:aws:iam::891377405852:role/arcanis-gh-act }}
+          role-to-assume: ${{ env.AWS_ROLE }}
 
       - name: Login to Amazon ECR
         id: login-ecr
