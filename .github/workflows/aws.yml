@@ -72,7 +72,7 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -f app/Dockerfile.prod ./app --platform linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY_ARCANIS:$IMAGE_TAG .
+          docker build -f app/Dockerfile.prod --platform linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY_ARCANIS:$IMAGE_TAG ./app
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_ARCANIS:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_ARCANIS:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
@@ -85,7 +85,7 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build ./nginx --platform linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG .
+          docker build --platform linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG ./nginx
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
