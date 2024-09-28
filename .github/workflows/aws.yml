@@ -30,8 +30,9 @@ on: workflow_dispatch
 
 env:
   AWS_REGION: us-east-2
-  ECR_REPOSITORY_ARCANIS: 891377405852.dkr.ecr.us-east-2.amazonaws.com/pinata-party/arcanis
-  ECR_REPOSITORY_NGINX: 891377405852.dkr.ecr.us-east-2.amazonaws.com/pinata-party/arcanis-nginx
+  AWS_ROLE: arn:aws:iam::891377405852:role/arcanis-gh-act
+  ECR_REPOSITORY_ARCANIS: pinata-party/arcanis
+  ECR_REPOSITORY_NGINX: pinata-party/arcanis-nginx
   ECS_SERVICE: arn:aws:ecs:us-east-2:891377405852:service/arcanis_cluster/arcanis-service-lb-prod
   ECS_CLUSTER: arn:aws:ecs:us-east-2:891377405852:cluster/arcanis_cluster
   ECS_TASK_DEFINITION: .aws/arcanis-task-def-github.json
@@ -39,6 +40,7 @@ env:
   CONTAINER_NAME_NGINX: nginx-proxy
 
 permissions:
+  id-token: write # This is required for requesting the JWT
   contents: read
 
 jobs:
@@ -52,15 +54,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ env.AWS_ROLE }}
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build, tag, and push arcanis image to Amazon ECR
         id: build-image-arcanis
@@ -71,7 +72,7 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_ARCANIS:$IMAGE_TAG .
+          docker build -f app/Dockerfile.prod --platform linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY_ARCANIS:$IMAGE_TAG ./app
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_ARCANIS:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_ARCANIS:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
@@ -84,7 +85,7 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG .
+          docker build --platform linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG ./nginx
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
@@ -103,9 +104,10 @@ jobs:
           task-definition: ${{ steps.task-def-1.outputs.task-definition }}
           container-name: ${{ env.CONTAINER_NAME_NGINX }}
           image: ${{ steps.build-image-nginx.outputs.image }}
+          docker-labels: com.github.nginx-proxy.nginx=com.github.nginx-proxy.nginx
 
       - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def-2.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
