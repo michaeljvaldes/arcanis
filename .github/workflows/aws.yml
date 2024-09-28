@@ -104,9 +104,10 @@ jobs:
           task-definition: ${{ steps.task-def-1.outputs.task-definition }}
           container-name: ${{ env.CONTAINER_NAME_NGINX }}
           image: ${{ steps.build-image-nginx.outputs.image }}
+          docker-labels: com.github.nginx-proxy.nginx
 
       - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def-2.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
